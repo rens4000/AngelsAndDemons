@@ -27,7 +27,7 @@ public class Core extends JavaPlugin {
 		configManager.loadDefaultLang();
 		arenaManager = new ArenaManager(this);
 		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
-		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); //test
+		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
 	}
 
 	public ConfigManager getConfigManager() {

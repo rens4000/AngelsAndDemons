@@ -2,6 +2,7 @@ package nl.rensmulder.angelsanddemons.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,6 +15,7 @@ import nl.rensmulder.angelsanddemons.Core;
 import nl.rensmulder.angelsanddemons.managers.UserManager;
 import nl.rensmulder.angelsanddemons.utilities.ChatUtilities;
 import nl.rensmulder.angelsanddemons.utilities.GameState;
+import nl.rensmulder.angelsanddemons.utilities.Team;
 
 public class Arena {
 	
@@ -59,7 +61,10 @@ public class Arena {
 	}
 
 	public void leave(String name) {
-		
+		if(numDemons() == 0) {
+			stop();
+			ChatUtilities.broadcastUsers(users, "All the demons were too scared to play. The " + ChatColor.AQUA + "Angels" + ChatColor.WHITE + " win!");
+		}
 	}
 	
 	public void countdown() {
@@ -119,11 +124,35 @@ public class Arena {
 	}
 	
 	private void start() {
-		//TODO: Wat er gebeurt als de game start.
+		String demonsName = getDemonsName();
+		Player p = Bukkit.getPlayer(demonsName);
+		List<String> temp = waitingPlayers;
+		temp.remove(demonsName);
+		User demon = new User(p.getUniqueId(), Team.DEMONS);
+		users.add(demon);
+		for(String s : temp) {
+			Player pl = Bukkit.getPlayer(s);
+			User u = new User(pl.getUniqueId(), Team.ANGELS);
+			users.add(u);
+		}
 	}
 	
+	private int numDemons() {
+		int i = 0;
+		for(User u : users) {
+			if(u.getTeam() == Team.DEMONS) i++;
+		}
+		return i;
+	}
+	
+	private String getDemonsName() {
+		Random r = new Random();
+		return waitingPlayers.get(r.nextInt(waitingPlayers.size()-1));
+	}
+
 	private void stop() {
-		//TODO: Wat er gebeurt als de game stopt.
+		state = GameState.RESETTING;
+		//Meer dingen
 	}
 	
 	private boolean hasEnoughPlayers() {
