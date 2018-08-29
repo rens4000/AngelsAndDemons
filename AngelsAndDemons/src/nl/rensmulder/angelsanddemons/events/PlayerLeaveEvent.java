@@ -5,6 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import nl.rensmulder.angelsanddemons.managers.ArenaManager;
+import nl.rensmulder.angelsanddemons.objects.Arena;
 
 public class PlayerLeaveEvent implements Listener {
 	
@@ -17,7 +18,8 @@ public class PlayerLeaveEvent implements Listener {
 	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent e) {
 		if(arenaManager.isPlayerInGame(e.getPlayer().getName())) {
-			arenaManager.getArena(e.getPlayer().getName()).leave(e.getPlayer().getName());
+			Arena a = arenaManager.getArena(e.getPlayer().getName());
+			User u = a
 		}
 	}
 

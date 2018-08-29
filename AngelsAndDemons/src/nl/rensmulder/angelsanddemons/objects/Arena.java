@@ -24,7 +24,7 @@ public class Arena {
 	private List<String> waitingPlayers = new ArrayList<String>();
 	private List<User> users = new ArrayList<User>();
 	private Location lobby, spawnAngels, spawnDemons;
-	private int countdown = 30;
+	private int countdown = 30, gameduration = 300;
 	private Core core;
 	private GameState state;
 	private UserManager userManager;
@@ -62,7 +62,7 @@ public class Arena {
 
 	public void leave(String name) {
 		if(numDemons() == 0) {
-			stop();
+			delayedStop();
 			ChatUtilities.broadcastUsers(users, "All the demons were too scared to play. The " + ChatColor.AQUA + "Angels" + ChatColor.WHITE + " win!");
 		}
 	}
@@ -123,6 +123,7 @@ public class Arena {
 		}.runTaskTimerAsynchronously(core, 0, 20);
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void start() {
 		String demonsName = getDemonsName();
 		Player p = Bukkit.getPlayer(demonsName);
@@ -130,12 +131,80 @@ public class Arena {
 		temp.remove(demonsName);
 		User demon = new User(p.getUniqueId(), Team.DEMONS);
 		users.add(demon);
+		p.sendMessage(Core.PREFIX + ChatColor.WHITE + "You have been made an " + ChatColor.RED + " Demon" + ChatColor.WHITE + ""
+				+ ". You have to kill as much demons as you can.");
+		p.sendTitle(ChatColor.RED + "DEMON", null);
 		for(String s : temp) {
 			Player pl = Bukkit.getPlayer(s);
 			User u = new User(pl.getUniqueId(), Team.ANGELS);
 			users.add(u);
+			pl.sendMessage(Core.PREFIX + ChatColor.WHITE + "You have been made an "
+					+ "" + ChatColor.AQUA + " Angel" + ChatColor.WHITE + ". Try to keep out of the hands of the demons to win this match!");
+			pl.sendTitle(ChatColor.AQUA + "ANGEL", null);
+		}
+		waitingPlayers.clear();
+		state = GameState.STARTED;
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				if(state != GameState.STARTED)
+					cancel();
+				gameduration--;
+				if(gameduration % 50 == 0 || gameduration == 20 || gameduration == 15 || gameduration == 10 || gameduration == 5) {
+					ChatUtilities.broadcastUsers(users, ChatColor.RED + "Only " + gameduration + " seconds left until the match ends!");
+				}
+				if(gameduration == 0) {
+					ChatUtilities.broadcastUsers(users, "The " + ChatColor.AQUA + " Angels " + ChatColor.WHITE + " have won this match!");
+					ChatUtilities.broadcastTitleUsers(users, ChatColor.AQUA + "The Angels", ChatColor.WHITE + "won the match!");
+					delayedStop();
+				}
+			}
+
+		}.runTaskTimerAsynchronously(core, 0, 20);
+	}
+	
+	public void giveDemonStuff(Player p) {
+		
+	}
+	
+	private void delayedStop() {
+		state = GameState.RESETTING;
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				stop();
+			}
+			
+		}.runTaskLater(core, 100);
+	}
+	
+	public void demonsWin() {
+		ChatUtilities.broadcastTitleUsers(users, ChatColor.RED + "The Demons", ChatColor.WHITE + "won the match!");
+	}
+	
+	private void stop() {
+		for(User u : users) {
+			Player p = Bukkit.getPlayer(u.getUuid());
+			p.getInventory().clear();
+			p.teleport(userManager.getLocations().get(p.getName()));
+			p.getInventory().setContents(userManager.getInventories().get(p.getName()));
+			p.getInventory().setArmorContents(userManager.getArmor().get(p.getName()));
 		}
 	}
+	
+	public User getUser(String name) {
+		Player p = Bukkit.getPlayer(name);
+		for(User u : users) {
+			if(u.getUuid().equals(p.getUniqueId())) return u;
+		}
+		return null;
+	}
+	
+	//TODO: RESET VOID
+	
+	//GETTERS AND SETTERS
 	
 	private int numDemons() {
 		int i = 0;
@@ -148,11 +217,6 @@ public class Arena {
 	private String getDemonsName() {
 		Random r = new Random();
 		return waitingPlayers.get(r.nextInt(waitingPlayers.size()-1));
-	}
-
-	private void stop() {
-		state = GameState.RESETTING;
-		//Meer dingen
 	}
 	
 	private boolean hasEnoughPlayers() {

@@ -10,7 +10,7 @@ import nl.rensmulder.angelsanddemons.managers.ArenaManager;
 import nl.rensmulder.angelsanddemons.managers.ConfigManager;
 
 /*
- * This plugins has been created by: rens4000(rensmulder.nl) and Skelic/SafeX.
+ * This plugins has been created by: rens4000(rensmulder.nl) and SKELIC.
  */
 
 public class Core extends JavaPlugin {
@@ -28,6 +28,23 @@ public class Core extends JavaPlugin {
 		arenaManager = new ArenaManager(this);
 		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
+		
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "                  SKELIC      " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "           Version: v" + getDescription().getVersion() + "         " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Plugin Status: Enabled     " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----------------------------------");
+	}
+	
+	@Override
+	public void onDisable() {
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "                  SKELIC      " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "           Version: v" + getDescription().getVersion() + "         " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "    Plugin Status: Disabled   " + ChatColor.DARK_RED + "|");
+		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----------------------------------");
 	}
 
 	public ConfigManager getConfigManager() {
