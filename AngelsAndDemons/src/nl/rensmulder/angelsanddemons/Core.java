@@ -5,9 +5,12 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
+import nl.rensmulder.angelsanddemons.commands.AngelsAndDemonsCMD;
 import nl.rensmulder.angelsanddemons.events.PlayerLeaveEvent;
+import nl.rensmulder.angelsanddemons.events.PlayerRespawnEvent;
 import nl.rensmulder.angelsanddemons.managers.ArenaManager;
 import nl.rensmulder.angelsanddemons.managers.ConfigManager;
+import nl.rensmulder.angelsanddemons.managers.UserManager;
 
 /*
  * This plugins has been created by: rens4000(rensmulder.nl) and SKELIC.
@@ -17,6 +20,8 @@ public class Core extends JavaPlugin {
 	
 	private ConfigManager configManager;
 	private ArenaManager arenaManager;
+	private UserManager userManager;
+	private AngelsAndDemonsCMD angelsAndDemonsCMD;
 	
 	public static String PREFIX;
 	
@@ -25,9 +30,13 @@ public class Core extends JavaPlugin {
 		PluginManager pm = Bukkit.getPluginManager();
 		configManager = new ConfigManager(this);
 		configManager.loadDefaultLang();
-		arenaManager = new ArenaManager(this);
+		userManager = new UserManager();
+		arenaManager = new ArenaManager(this, configManager, userManager);
+		angelsAndDemonsCMD = new AngelsAndDemonsCMD();
 		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
+		pm.registerEvents(new PlayerRespawnEvent(arenaManager, this), this);
+		getCommand("angelsanddemons").setExecutor(angelsAndDemonsCMD);
 		
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");
@@ -45,6 +54,10 @@ public class Core extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "           Version: v" + getDescription().getVersion() + "         " + ChatColor.DARK_RED + "|");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "    Plugin Status: Disabled   " + ChatColor.DARK_RED + "|");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----------------------------------");
+	}
+	
+	public AngelsAndDemonsCMD getAngelsAndDemonsCMD() {
+		return angelsAndDemonsCMD;
 	}
 
 	public ConfigManager getConfigManager() {
