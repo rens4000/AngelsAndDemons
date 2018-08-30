@@ -36,11 +36,12 @@ public class PlayerRespawnEvent implements Listener {
 					if (p.isDead()) {
 						p.teleport(a.getSpawnDemons());
 						p.getInventory().clear();
-						p.getInventory().
 						p.setHealth(20);
 						p.setFoodLevel(20);
 						
 						u.setTeam(Team.DEMONS);
+						a.giveDemonStuff(p);
+						p.teleport(a.getSpawnDemons());
 					}
 				}
 				

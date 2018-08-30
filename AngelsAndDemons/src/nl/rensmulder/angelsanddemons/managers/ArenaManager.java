@@ -13,11 +13,15 @@ import nl.rensmulder.angelsanddemons.objects.User;
 public class ArenaManager {
 	
 	private Core core;
+	private ConfigManager configManager;
 	
 	private List<Arena> arenas = new ArrayList<>();
+	private UserManager userManager;
 	
-	public ArenaManager(Core core) {
+	public ArenaManager(Core core, ConfigManager configManager, UserManager userManager) {
 		this.core = core;
+		this.configManager = configManager;
+		this.userManager = userManager;
 	}
 	
 	public boolean isPlayerInGame(String name) {
@@ -42,6 +46,12 @@ public class ArenaManager {
 			}
 		}
 		return null;
+	}
+	
+	public void createNewArena(String name) {
+		final int min = configManager.getConfig().getInt("settings.default-min-players");
+		final int max = configManager.getConfig().getInt("settings.default-max-players");
+		Arena a = new Arena(name, min, max, core, userManager, false);
 	}
 
 }

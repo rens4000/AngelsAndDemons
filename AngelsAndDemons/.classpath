@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/Rens Mulder/Documents/Kingdom/spigot-1.12.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/djcre_000/Desktop/Mappen/MijnPlugins/spigot-1.12.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rens/Downloads/spigot-1.12.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

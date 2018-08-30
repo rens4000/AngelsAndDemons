@@ -19,7 +19,7 @@ public class PlayerLeaveEvent implements Listener {
 	public void onPlayerLeave(PlayerQuitEvent e) {
 		if(arenaManager.isPlayerInGame(e.getPlayer().getName())) {
 			Arena a = arenaManager.getArena(e.getPlayer().getName());
-			User u = a
+			a.leave(e.getPlayer().getName());
 		}
 	}
 

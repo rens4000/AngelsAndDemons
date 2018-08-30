@@ -7,7 +7,12 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.md_5.bungee.api.ChatColor;
@@ -61,9 +66,19 @@ public class Arena {
 	}
 
 	public void leave(String name) {
-		if(numDemons() == 0) {
-			delayedStop();
-			ChatUtilities.broadcastUsers(users, "All the demons were too scared to play. The " + ChatColor.AQUA + "Angels" + ChatColor.WHITE + " win!");
+		if(state == GameState.STARTED)
+			if(numDemons() == 0) {
+				delayedStop();
+				ChatUtilities.broadcastUsers(users, "All the demons were too scared to play. The " + ChatColor.AQUA + "Angels" + ChatColor.WHITE + " win!");
+			}
+		
+		Player p = Bukkit.getPlayer(name);
+		p.getInventory().clear();
+		p.teleport(userManager.getLocations().get(p.getName()));
+		p.getInventory().setContents(userManager.getInventories().get(p.getName()));
+		p.getInventory().setArmorContents(userManager.getArmor().get(p.getName()));
+		if(p.hasPotionEffect(PotionEffectType.SPEED)) {
+			p.removePotionEffect(PotionEffectType.SPEED);
 		}
 	}
 	
@@ -123,6 +138,11 @@ public class Arena {
 		}.runTaskTimerAsynchronously(core, 0, 20);
 	}
 	
+	private boolean canBeEnabled() {
+		//TODO: MAKE CAN BE ENABLED METHOD
+		return false;
+	}
+	
 	@SuppressWarnings("deprecation")
 	private void start() {
 		String demonsName = getDemonsName();
@@ -165,9 +185,40 @@ public class Arena {
 	}
 	
 	public void giveDemonStuff(Player p) {
+		giveSword(p);
+		giveTeleportCompass(p);
+		giveSpeedBoost(p);
+	}
+	
+	private void giveSpeedBoost(Player p) {
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 99999, 1));
 		
 	}
 	
+	private void giveTeleportCompass(Player p) {
+		ItemStack i = new ItemStack(Material.COMPASS);
+		ItemMeta im = i.getItemMeta();
+		im.setDisplayName(ChatColor.RED + "Teleport Compass");
+		List<String> lores = new ArrayList<>();
+		lores.add(ChatColor.WHITE + "Teleport to a random Player");
+		lores.add(ChatColor.DARK_RED + "Cooldown: " + ChatColor.WHITE + " 20 seconds");
+		im.setLore(lores);
+		i.setItemMeta(im);
+		p.getInventory().addItem(i);
+	}
+	
+	private void giveSword(Player p) {
+		ItemStack i = new ItemStack(Material.WOOD_SWORD);
+		ItemMeta im = i.getItemMeta();
+		im.setDisplayName(ChatColor.RED + "Angel slayer");
+		List<String> lores = new ArrayList<>();
+		lores.add(ChatColor.WHITE + "Murder an Angel");
+		lores.add(ChatColor.DARK_RED + "Cooldown: " + ChatColor.WHITE + " None except after teleport(5s)");
+		im.setLore(lores);
+		i.setItemMeta(im);
+		p.getInventory().addItem(i);
+	}
+
 	private void delayedStop() {
 		state = GameState.RESETTING;
 		new BukkitRunnable() {
@@ -186,14 +237,18 @@ public class Arena {
 	
 	private void stop() {
 		for(User u : users) {
-			Player p = Bukkit.getPlayer(u.getUuid());
-			p.getInventory().clear();
-			p.teleport(userManager.getLocations().get(p.getName()));
-			p.getInventory().setContents(userManager.getInventories().get(p.getName()));
-			p.getInventory().setArmorContents(userManager.getArmor().get(p.getName()));
+			leave(Bukkit.getPlayer(u.getUuid()).getName());
 		}
+		reset();
 	}
 	
+	private void reset() {
+		users.clear();
+		countdown = 30;
+		gameduration = 300;
+		state = GameState.WAITING;
+	}
+
 	public User getUser(String name) {
 		Player p = Bukkit.getPlayer(name);
 		for(User u : users) {

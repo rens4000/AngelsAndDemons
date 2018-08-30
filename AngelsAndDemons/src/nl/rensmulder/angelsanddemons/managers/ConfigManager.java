@@ -46,6 +46,12 @@ public class ConfigManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void loadDefaultConfig() {
+		config.addDefault("settings.default-min-players", 4);
+		config.addDefault("settings.default-max-players", 20);
+		saveConfig();
+	}
 
 	public void loadDefaultLang() {
 		lang.addDefault("Prefix", "&7[&b&lAngels&f&lAnd&4&lDemons&7]");
