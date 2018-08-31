@@ -139,8 +139,7 @@ public class Arena {
 	}
 	
 	private boolean canBeEnabled() {
-		//TODO: MAKE CAN BE ENABLED METHOD
-		return false;
+		return lobby != null && spawnAngels != null && spawnDemons != null;
 	}
 	
 	@SuppressWarnings("deprecation")

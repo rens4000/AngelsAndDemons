@@ -37,6 +37,7 @@ public class Core extends JavaPlugin {
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
 		pm.registerEvents(new PlayerRespawnEvent(arenaManager, this), this);
 		getCommand("angelsanddemons").setExecutor(angelsAndDemonsCMD);
+		arenaManager.loadArenas();
 		
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");

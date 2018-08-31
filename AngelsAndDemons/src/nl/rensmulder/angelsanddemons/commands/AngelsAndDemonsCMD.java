@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import nl.rensmulder.angelsanddemons.Core;
+import nl.rensmulder.angelsanddemons.SetSpawn;
 
 public class AngelsAndDemonsCMD implements CommandExecutor {
 	
@@ -19,6 +20,7 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 	public AngelsAndDemonsCMD(Core core) {
 		this.core = core;
 		commands.add(new CreateCMD("create", "Create an arena", "create <name>"));
+		commands.add(new SetSpawn("setspawn", "Set the spawn of an arena spawn", "setspawn <arena> <angels/demons/lobby>"));
 	}
 
 	@Override

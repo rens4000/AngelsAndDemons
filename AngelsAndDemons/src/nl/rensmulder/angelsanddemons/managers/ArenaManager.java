@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -58,8 +59,34 @@ public class ArenaManager {
 		int loaded = 0;
 		for(String s : data.getConfigurationSection("arenas").getKeys(false)) {
 			loaded++;
-			//LOAD ARENA
+			int min = data.getInt("arenas." + s + ".min");
+			int max = data.getInt("arenas." + s + ".max");
+			boolean enabled = data.getBoolean("arenas." + s + ".enabled");
+			Arena a = new Arena(s, min, max, core, userManager, enabled);
+			if(data.contains("arenas." + s + ".lobby")) {
+				int x = data.getInt("arenas." + s + ".lobby.x");
+				int y = data.getInt("arenas." + s + ".lobby.y");
+				int z = data.getInt("arenas." + s + ".lobby.z");
+				String world = data.getString("arenas." + s + ".lobby.world");
+				a.setLobby(new Location(Bukkit.getWorld(world),x,y,z));
+			}
+			if(data.contains("arenas." + s + ".angels")) {
+				int x = data.getInt("arenas." + s + ".angels.x");
+				int y = data.getInt("arenas." + s + ".angels.y");
+				int z = data.getInt("arenas." + s + ".angels.z");
+				String world = data.getString("arenas." + s + ".angels.world");
+				a.setSpawnAngels(new Location(Bukkit.getWorld(world),x,y,z));
+			}
+			if(data.contains("arenas." + s + ".demons")) {
+				int x = data.getInt("arenas." + s + ".demons.x");
+				int y = data.getInt("arenas." + s + ".demons.y");
+				int z = data.getInt("arenas." + s + ".demons.z");
+				String world = data.getString("arenas." + s + ".demons.world");
+				a.setSpawnDemons(new Location(Bukkit.getWorld(world),x,y,z));
+			}
+			arenas.add(a);
 		}
+		core.getLogger().info(loaded + " arenas were loaded!");
 	}
 	
 	public void createNewArena(String name) {
