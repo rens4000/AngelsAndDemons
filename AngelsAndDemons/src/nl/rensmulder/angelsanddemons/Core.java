@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import net.md_5.bungee.api.ChatColor;
 import nl.rensmulder.angelsanddemons.commands.AngelsAndDemonsCMD;
+import nl.rensmulder.angelsanddemons.events.FallDamageEvent;
+import nl.rensmulder.angelsanddemons.events.FoodLevelChange;
 import nl.rensmulder.angelsanddemons.events.PlayerLeaveEvent;
 import nl.rensmulder.angelsanddemons.events.PlayerRespawnEvent;
 import nl.rensmulder.angelsanddemons.managers.ArenaManager;
@@ -28,15 +30,22 @@ public class Core extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		PluginManager pm = Bukkit.getPluginManager();
+		
 		configManager = new ConfigManager(this);
 		configManager.loadDefaultLang();
 		userManager = new UserManager();
 		arenaManager = new ArenaManager(this, configManager, userManager);
 		angelsAndDemonsCMD = new AngelsAndDemonsCMD(this);
+		
 		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
+		
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
 		pm.registerEvents(new PlayerRespawnEvent(arenaManager, this), this);
+		pm.registerEvents(new FoodLevelChange(arenaManager), this);
+		pm.registerEvents(new FallDamageEvent(arenaManager), this);
+		
 		getCommand("angelsanddemons").setExecutor(angelsAndDemonsCMD);
+		
 		arenaManager.loadArenas();
 		
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");

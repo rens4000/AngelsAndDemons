@@ -22,6 +22,7 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 		commands.add(new SetSpawn("setspawn", "Set the spawn of an arena spawn", "setspawn <arena> <angels/demons/lobby>"));
 		commands.add(new JoinCMD("join", "Join an arena", "join <arena>"));
 		commands.add(new LeaveCMD("leave", "Leave the arena you're in", "leave"));
+		commands.add(new ToggleCMD("toggle", "Enable/Disable an arena", "toggle <arena>"));
 	}
 
 	@Override

@@ -140,7 +140,7 @@ public class Arena {
 		}.runTaskTimerAsynchronously(core, 0, 20);
 	}
 	
-	private boolean canBeEnabled() {
+	public boolean canBeEnabled() {
 		return lobby != null && spawnAngels != null && spawnDemons != null;
 	}
 	
@@ -231,12 +231,7 @@ public class Arena {
 			
 		}.runTaskLater(core, 100);
 	}
-	
-	public void demonsWin() {
-		ChatUtilities.broadcastTitleUsers(users, ChatColor.RED + "The Demons", ChatColor.WHITE + "won the match!");
-	}
-	
-	private void stop() {
+	public void stop() {
 		for(User u : users) {
 			leave(Bukkit.getPlayer(u.getUuid()).getName());
 		}
@@ -257,8 +252,6 @@ public class Arena {
 		}
 		return null;
 	}
-	
-	//TODO: RESET VOID
 	
 	//GETTERS AND SETTERS
 	
@@ -349,6 +342,15 @@ public class Arena {
 
 	public GameState getState() {
 		return state;
+	}
+
+	public void close() {
+		if(waitingPlayers.size() != 0) {
+			ChatUtilities.broadcast(waitingPlayers, ChatColor.RED + "The arena you were in got closed by an admin!");
+		} else {
+			ChatUtilities.broadcastUsers(users, ChatColor.RED + "The arena you were in got closed by an admin!");
+		}
+		stop();
 	}
 
 }
