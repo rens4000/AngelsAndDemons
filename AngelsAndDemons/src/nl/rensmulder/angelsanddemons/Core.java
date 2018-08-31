@@ -32,7 +32,7 @@ public class Core extends JavaPlugin {
 		configManager.loadDefaultLang();
 		userManager = new UserManager();
 		arenaManager = new ArenaManager(this, configManager, userManager);
-		angelsAndDemonsCMD = new AngelsAndDemonsCMD();
+		angelsAndDemonsCMD = new AngelsAndDemonsCMD(this);
 		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
 		pm.registerEvents(new PlayerRespawnEvent(arenaManager, this), this);
