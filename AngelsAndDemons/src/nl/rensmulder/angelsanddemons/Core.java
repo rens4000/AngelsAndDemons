@@ -23,7 +23,6 @@ public class Core extends JavaPlugin {
 	private ConfigManager configManager;
 	private ArenaManager arenaManager;
 	private UserManager userManager;
-	private AngelsAndDemonsCMD angelsAndDemonsCMD;
 	
 	public static String PREFIX;
 	
@@ -31,23 +30,29 @@ public class Core extends JavaPlugin {
 	public void onEnable() {
 		PluginManager pm = Bukkit.getPluginManager();
 		
+		/* Initialization */
 		configManager = new ConfigManager(this);
 		configManager.loadDefaultLang();
 		userManager = new UserManager();
 		arenaManager = new ArenaManager(this, configManager, userManager);
 		angelsAndDemonsCMD = new AngelsAndDemonsCMD(this);
+				
+		/* Prefix initialization */
+		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; 
 		
-		PREFIX = ChatColor.translateAlternateColorCodes('&', configManager.getLang().getString("Prefix")) + ChatColor.WHITE + " "; //Initializes Prefix
-		
+		/* Registering events */
 		pm.registerEvents(new PlayerLeaveEvent(arenaManager), this); 
 		pm.registerEvents(new PlayerRespawnEvent(arenaManager, this), this);
 		pm.registerEvents(new FoodLevelChange(arenaManager), this);
 		pm.registerEvents(new FallDamageEvent(arenaManager), this);
 		
+		/* Registering commands */
 		getCommand("angelsanddemons").setExecutor(angelsAndDemonsCMD);
 		
+		/* Loading the arenas */
 		arenaManager.loadArenas();
 		
+		/* Saying message in config */
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "                  SKELIC      " + ChatColor.DARK_RED + "|");
@@ -56,8 +61,10 @@ public class Core extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----------------------------------");
 	}
 	
+	
 	@Override
 	public void onDisable() {
+		/* Saying message in config */
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----{Angels and Demons Plugin}----");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "      Created by: rens4000    " + ChatColor.DARK_RED + "|");
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "|" + ChatColor.RED + "                  SKELIC      " + ChatColor.DARK_RED + "|");
@@ -66,9 +73,7 @@ public class Core extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(PREFIX + ChatColor.DARK_RED + "-----------------------------------");
 	}
 	
-	public AngelsAndDemonsCMD getAngelsAndDemonsCMD() {
-		return angelsAndDemonsCMD;
-	}
+	/* Getters */
 
 	public ConfigManager getConfigManager() {
 		return configManager;

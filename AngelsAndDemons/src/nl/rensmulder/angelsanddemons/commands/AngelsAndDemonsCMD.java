@@ -12,10 +12,13 @@ import nl.rensmulder.angelsanddemons.Core;
 
 public class AngelsAndDemonsCMD implements CommandExecutor {
 	
+	/* Command list */
 	public List<DefaultCommand> commands = new ArrayList<DefaultCommand>();
 	
+	/* Core instance */
 	private Core core;
 	
+	/* Initializing vars and adding commands to the commands list */
 	public AngelsAndDemonsCMD(Core core) {
 		this.core = core;
 		commands.add(new CreateCMD("create", "Create an arena", "create <name>"));
@@ -25,18 +28,22 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 		commands.add(new ToggleCMD("toggle", "Enable/Disable an arena", "toggle <arena>"));
 	}
 
+	/* The command itself */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		/* Checking if the sub-command is nothing */
 		if(args.length == 0) {
 			//TODO: CONNER MAAK LEUK WELKOM DINGETJE
 			return false;
 		}
+		/* Checking if the sub command is 1 of the commands in the commandlist */
 		for(DefaultCommand c : commands) {
 			if(args[0].equalsIgnoreCase(c.getName())) {
 				c.run(args, sender, this);
 				return false;
 			}
 		} 
+		/* Sends a nice help message */
 		if(hasPermission(sender)) {
 			help(sender);
 		} else {
@@ -46,10 +53,12 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 		return false;
 	}
 	
+	/* Tool to see if players have a certain permission */
 	public boolean hasPermission(CommandSender sender) {
 		return sender.hasPermission("angelsanddemons.admin");
 	}
 	
+	/* Tells all the commands */
 	public void help(CommandSender sender) {
 		sender.sendMessage(ChatColor.AQUA + "               Help command               ");
 		sender.sendMessage(ChatColor.AQUA + "=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=");
@@ -58,6 +67,8 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 		}
 		sender.sendMessage(ChatColor.AQUA + "=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=");
 	}
+	
+	/* Getters */
 	
 	public Core getCore() {
 		return core;
