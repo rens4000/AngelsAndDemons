@@ -9,7 +9,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import nl.rensmulder.angelsanddemons.Core;
-import nl.rensmulder.angelsanddemons.SetSpawn;
 
 public class AngelsAndDemonsCMD implements CommandExecutor {
 	
@@ -21,6 +20,8 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 		this.core = core;
 		commands.add(new CreateCMD("create", "Create an arena", "create <name>"));
 		commands.add(new SetSpawn("setspawn", "Set the spawn of an arena spawn", "setspawn <arena> <angels/demons/lobby>"));
+		commands.add(new JoinCMD("join", "Join an arena", "join <arena>"));
+		commands.add(new LeaveCMD("leave", "Leave the arena you're in", "leave"));
 	}
 
 	@Override
@@ -35,7 +36,11 @@ public class AngelsAndDemonsCMD implements CommandExecutor {
 				return false;
 			}
 		} 
-		//Stuur help command
+		if(hasPermission(sender)) {
+			help(sender);
+		} else {
+			sender.sendMessage(Core.PREFIX + ChatColor.RED + "That was not a valid sub-command");
+		}
 		
 		return false;
 	}

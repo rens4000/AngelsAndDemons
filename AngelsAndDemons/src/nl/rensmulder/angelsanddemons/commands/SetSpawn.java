@@ -1,12 +1,11 @@
-package nl.rensmulder.angelsanddemons;
+package nl.rensmulder.angelsanddemons.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import nl.rensmulder.angelsanddemons.commands.AngelsAndDemonsCMD;
-import nl.rensmulder.angelsanddemons.commands.DefaultCommand;
+import nl.rensmulder.angelsanddemons.Core;
 import nl.rensmulder.angelsanddemons.objects.Arena;
 
 public class SetSpawn extends DefaultCommand {

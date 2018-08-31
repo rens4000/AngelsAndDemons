@@ -38,7 +38,7 @@ public class ArenaManager {
 		return false;
 	}
 	
-	public Arena getArena(String playerName) {
+	public Arena getArenaByPlayer(String playerName) {
 		Player p = Bukkit.getPlayer(playerName);
 		for(Arena a : arenas) {
 			if(a.getWaitingPlayers().contains(playerName))
@@ -46,6 +46,14 @@ public class ArenaManager {
 			for(User u : a.getUsers()) {
 				if(u.getUuid().equals(p.getUniqueId())) return a;
 			}
+		}
+		return null;
+	}
+	
+	public Arena getArena(String arena) {
+		for(Arena a : arenas) {
+			if(a.getName().equals(arena))
+				return a;
 		}
 		return null;
 	}

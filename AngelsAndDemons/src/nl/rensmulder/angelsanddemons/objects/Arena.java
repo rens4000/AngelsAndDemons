@@ -55,6 +55,7 @@ public class Arena {
 		p.getInventory().clear();
 		p.teleport(lobby);
 		startCountdown();
+		p.sendMessage(Core.PREFIX + "You joined AngelsAndDemons!");
 	}
 	
 	private void startCountdown() {
@@ -70,6 +71,7 @@ public class Arena {
 			if(numDemons() == 0) {
 				delayedStop();
 				ChatUtilities.broadcastUsers(users, "All the demons were too scared to play. The " + ChatColor.AQUA + "Angels" + ChatColor.WHITE + " win!");
+				ChatUtilities.broadcastTitleUsers(users, ChatColor.AQUA + "The Angels", ChatColor.WHITE + "won the match!");
 			}
 		
 		Player p = Bukkit.getPlayer(name);
@@ -343,6 +345,10 @@ public class Arena {
 	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public GameState getState() {
+		return state;
 	}
 
 }
